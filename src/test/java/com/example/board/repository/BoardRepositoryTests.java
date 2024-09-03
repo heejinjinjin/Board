@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -49,5 +50,13 @@ public class BoardRepositoryTests {
         Object result = boardRepository.getBoardWithWriter(10L);
         Object[] arr = (Object[]) result;
         System.out.println(Arrays.toString(arr));
+    }
+
+    @Test
+    public void testReadWithReply(){
+        List<Object[]> result = boardRepository.getBoardWithReply(10L);
+        for(Object[] arr : result){
+            System.out.println(Arrays.toString(arr));
+        }
     }
 }
