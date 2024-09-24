@@ -1,6 +1,8 @@
 package com.example.board.service;
 
 import com.example.board.dto.BoardDTO;
+import com.example.board.dto.PageRequestDTO;
+import com.example.board.dto.PageResultDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,5 +22,31 @@ public class BoardServiceTest {
                 .build();
         Long bno = boardService.register(dto);
         System.out.println("정상적으로 글이 저장되었습니다." + bno);
+    }
+
+    @Test
+    public void testList() {
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+
+        PageResultDTO<BoardDTO, Object[]> result = boardService.getList(pageRequestDTO);
+
+        for(BoardDTO boardDTO : result.getDtoList()){
+            System.out.println(boardDTO);
+        }
+    }
+
+    @Test
+    void testGet(){
+        Long bno = 101L;
+
+        BoardDTO boardDTO = boardService.get(bno);
+
+        System.out.println(boardDTO);
+    }
+
+    @Test
+    void testRemove(){
+        Long bno = 6L;
+        boardService.removewithReplies(bno);
     }
 }

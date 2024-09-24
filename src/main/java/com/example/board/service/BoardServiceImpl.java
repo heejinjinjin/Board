@@ -6,10 +6,12 @@ import com.example.board.dto.PageResultDTO;
 import com.example.board.entity.Borad;
 import com.example.board.entity.Member;
 import com.example.board.repository.BoardRepository;
+import com.example.board.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Function;
 
@@ -17,6 +19,8 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository repository;
+    private final ReplyRepository replyRepository;
+
     @Override
     public Long register(BoardDTO dto) {
         Borad board = dtoToEntity(dto);
@@ -32,5 +36,24 @@ public class BoardServiceImpl implements BoardService {
         Page<Object[]> result = repository.getBoardWithReplyCount(pageRequestDTO.getPageable(Sort.by("bno").descending()));
 
         return new PageResultDTO<>(result, fn);
+    }
+
+    @Override
+    public BoardDTO get(Long bno) {
+        Object result = repository.getBoardByBno(bno);
+
+        Object[] arr = (Object[]) result;
+        BoardDTO boardDTO = entityToDTO((Borad) arr[0], (Member) arr[1], (Long) arr[2]);
+
+        return boardDTO;
+    }
+
+    @Transactional
+    @Override
+    public void removewithReplies(Long bno) {
+        // 댓글 삭제
+        replyRepository.deleteByBno(bno);
+        // 원글 삭제
+        repository.deleteById(bno);
     }
 }
