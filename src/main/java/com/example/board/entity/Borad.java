@@ -20,4 +20,14 @@ public class Borad extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member writer; //Foreign Key 설정(참조무결성 유지)
+
+    // 변경된 제목으로 수정
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    //변경된 내용으로 수정
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }
