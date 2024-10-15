@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @ToString(exclude = "writer")
-
 public class Borad extends BaseEntity{
     @Id //기본키(primary key)설정
     @GeneratedValue(strategy = GenerationType.IDENTITY) //1씩 자동증가(auto-increment)
