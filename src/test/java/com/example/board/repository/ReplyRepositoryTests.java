@@ -18,7 +18,7 @@ public class ReplyRepositoryTests {
 
     @Test
     public void testListByBoard(){
-        List<Reply> replyList = replyRepository.getRepliesByBoardOrderByRno(Borad.builder().bno(99L).build());
+        List<Reply> replyList = replyRepository.getRepliesByBoardOrderByRno(Borad.builder().bno(97L).build());
         replyList.forEach(reply -> System.out.println(reply));
     }
 
