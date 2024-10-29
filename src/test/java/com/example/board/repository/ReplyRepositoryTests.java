@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -16,7 +17,13 @@ public class ReplyRepositoryTests {
     private ReplyRepository replyRepository;
 
     @Test
-    public void insertBoard(){
+    public void testListByBoard(){
+        List<Reply> replyList = replyRepository.getRepliesByBoardOrderByRno(Borad.builder().bno(99L).build());
+        replyList.forEach(reply -> System.out.println(reply));
+    }
+
+    @Test
+    public void insertReply(){
         IntStream.rangeClosed(1, 300).forEach(i ->{
             long bno = (long) (Math.random() * 100 + 1); //1~100사이의 임의의 long 형의 정수 값
 

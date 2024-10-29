@@ -19,6 +19,7 @@ public class Reply extends BaseEntity{
 
     private String replyer;
 
-    @ManyToOne
+    // 지연로딩 방식으로 수정 이유: 즉시 로딩을 사용할 경우 불필요한 JOIN을 하므로 성능을 저하시킬 수 있다.
+    @ManyToOne(fetch = FetchType.LAZY)
     private Borad board;
 }

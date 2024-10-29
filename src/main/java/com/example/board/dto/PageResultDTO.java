@@ -3,7 +3,6 @@ package com.example.board.dto;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -14,14 +13,12 @@ import java.util.stream.IntStream;
 public class PageResultDTO<DTO, EN> {
     // 화면에 보여질 글목록: GuestbookDTO객체 참조값들이 저장된 리스트
     private List<DTO> dtoList;
-
     // 전체 페이지수
     private int totalPage;
     // 현재 페이지 번호
     private int page;
     // 한 페이지에 보여지는 글목록 개수
     private int size;
-
     // 한 화면에 아래쪽에 보여질 시작페이지 번호
     private int start;
     // 한 화면에 아래쪽에 보여질 마지막페이지 번호
@@ -30,7 +27,6 @@ public class PageResultDTO<DTO, EN> {
     private boolean prev, next;
     // 한 화면에 보여질 페이지 번호 목록이 저장
     private List<Integer> pageList;
-
     public PageResultDTO(Page<EN> result, Function<EN, DTO> fn){
         // 매개변수로 전달받은 결과행들과 Entity를 DTO로 변환한 fn을 사용해서 list에 GuestbookDTO객체를 저장한 리스트
         dtoList = result.stream().map(fn).collect(Collectors.toList());

@@ -1,7 +1,6 @@
 package com.example.board.repository.search;
 
 import com.example.board.entity.Borad;
-
 import com.example.board.entity.QBorad;
 import com.example.board.entity.QMember;
 import com.example.board.entity.QReply;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
