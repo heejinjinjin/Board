@@ -39,6 +39,11 @@
 
             <div class="mt-4">
                 <h5>
+                    <span class = "badge result-item addReply">
+                        Add Reply
+                    </span>
+                </h5>
+                <h5>
                     <span class = "badge result-item replyCount">
                         Reply Count [[${dto.replyCount}]]
                     </span>
@@ -49,17 +54,115 @@
             </div>
         </th:block>
     </th:block>
+
+<!--Start Modal-->
+<div class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal Title</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&nbsp;&nbsp;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="replyText" placeholder="Reply Text...">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="replyer" placeholder="Replyer">
+                    <input type="hidden" name="rno">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger replyRemove">Remove</button>
+                <button type="button" class="btn btn-info replyModify">Modify</button>
+                <button type="button" class="btn btn-primary replySave">Save</button>
+                <button type="button" class="btn btn-outline-secondary replyClose" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div> <!--//End Modal-->
+
     <script th:inline="javascript">
         $(document).ready(function (){
            var bno = [[${dto.bno}]];
 
            var listGroup = $(".replyList");
 
-           $(".replyCount").click(function () {
+           // 날짜형식에 맞춰서 문자열로 반환하는 메소드
+            function formatTime(dateStr) {
+                var dateObj = new Date(dateStr);
+                var result = dateObj.getFullYear() + '/';
+                    result += (dateObj.getMonth() + 1) + '/';
+                    result += dateObj.getDate() + '/';
+                    result += dateObj.getHours() + ':';
+                    result += dateObj.getMinutes();
+                return result;
+            }
+
+            // 특정 게시글의 댓글 처리 함수
+            function loadJSONData() {
+                $.getJSON('/replies/board/' + bno, function (arr){
+
+                    var htmlStr = "";
+
+                    $('.replyCount').html("Reply Count " + arr.length);
+
+                    $.each(arr, function (idx, reply) {
+                        console.log(reply);
+                        htmlStr += '<div class="card-body" data-rno="' + reply.rno + '"><b>' + reply.rno +'</b>'
+                        htmlStr += '<h5 class="card-title">' + reply.text + '</h5>'
+                        htmlStr += '<h6 class="card-subtitle mb-2 text-muted">' + reply.replyer + '</h6>'
+                        htmlStr += '<p class="card-text">' + formatTime(reply.regDate) + '</p>'
+                        htmlStr += '</div>'
+                    })
+
+                    listGroup.html(htmlStr);
+                })
+
+            }
+
+            $(".replyCount").click(function () {
                $.getJSON('/replies/board/' + bno, function (jsonArr) {
                    console.log(jsonArr)
+                   loadJSONData()
                })
            });
+
+        // 모달창
+            var modal = $('.modal');
+            $(".addReply").click(function () {
+                modal.show();
+                $('input[name="replyText"]').val('');
+                $('input[name="replyer"]').val('');
+                $(".modal-footer .btn").hide(); // 모든 버튼을 숨기게
+                $(".replySave, .replyClose").show(); //save 버튼과 close 버튼만 보이게
+            })
+
+            //모달창 닫기
+            $(".btn-close, .replyClose").click(function () {
+                modal.hide()
+            })
+
+            //댓글 추가 기능 실행
+            $(".replySave").click(function () {
+                var reply = {bno: bno, text: $('input[name="replyText"]').val(), replyer: $('input[name="replyer"]').val()};
+                $.ajax({
+                    url: '/replies/',
+                    method: 'post',
+                    data: JSON.stringify(reply),
+                    contentType: 'application/json; charset = utf-8',
+                    dataType: 'json',
+                    success: function (data) {
+                        var newRno = parseInt(data);
+                        alert(newRno + "번 댓글이 정상 등록되었습니다.");
+                        modal.show('hide');
+                        loadJSONData();
+                    }
+                })
+                console.log(reply);
+            })
         });
     </script>
 </html>
